@@ -92,7 +92,20 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    Scheduler.getInstance().run();
+    //Scheduler.getInstance().run();
+    if(m_OI.controller.getRawButton(OI.Button.A.getButtonNumber())) {
+      m_Shooter.rampUp(0.9);
+    } else {
+      m_Shooter.rampUp(0);
+    }
+
+    if(m_OI.controller.getRawButton(OI.Button.B.getButtonNumber())) {
+      m_Shooter.index(0.9);
+    } else {
+      m_Shooter.index(0);
+    }
+
+
   }
 
   /**

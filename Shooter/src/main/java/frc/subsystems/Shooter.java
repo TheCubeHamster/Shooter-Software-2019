@@ -27,7 +27,7 @@ public class Shooter extends Subsystem {
     flywheel = new WPI_TalonSRX(RobotMap.FLYWHEEL_PORT);
     indexer = new WPI_TalonSRX(RobotMap.INDEXER_PORT);
 
-    flywheel.setInverted(InvertType.None);
+    flywheel.setInverted(InvertType.InvertMotorOutput);
     flywheel.configVoltageCompSaturation(12.0);
 
     indexer.setInverted(InvertType.InvertMotorOutput);
@@ -68,7 +68,7 @@ public class Shooter extends Subsystem {
     flywheel.set(ControlMode.PercentOutput, 0);
   }
   public void index(double index) {
-    indexer.set(ControlMode.PercentOutput, index);
+    indexer.set(ControlMode.PercentOutput, 0.5);
   }
   @Override
   public void initDefaultCommand() {

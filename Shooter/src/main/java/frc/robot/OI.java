@@ -18,10 +18,10 @@ import frc.commands.IndexerControl;
 public class OI {
 
     public static enum Button {
-        A(0),
-        B(1),
-        X(2),
-        Y(3),
+        A(1),
+        B(2),
+        X(3),
+        Y(4),
         LBumper(5),
         RBumper(4),
         Start(6),
@@ -60,7 +60,5 @@ public class OI {
         buttonB = new JoystickButton(controller, Button.B.getButtonNumber());
         buttonX = new JoystickButton(controller, Button.X.getButtonNumber());
         buttonY = new JoystickButton(controller, Button.Y.getButtonNumber());
-        buttonA.whileHeld(new FlywheelControl());
-        buttonB.whileHeld(new IndexerControl());
     }
 }
