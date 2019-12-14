@@ -13,50 +13,67 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.OI;
 import frc.robot.Robot;
 
-public class FlywheelControl extends Command {
+public class ShooterControl extends Command {
   private Timer timer;
-  private double lastUpdate = 0;
-  private static final double UPDATE_TIME = 0.2;
-  public FlywheelControl() {
-    requires (Robot.m_Shooter);
-    timer = new Timer();
+  private double lastUpdate;
+  private double shooterPower, indexPower;
+
+  private static final double UPDATE_TIME = 0.25;
+  public ShooterControl() {
+    requires(Robot.m_Shooter);
   }
-
-
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    timer = new Timer();
     timer.reset();
     timer.start();
+    lastUpdate = 0;
+    shooterPower = 0;
+    indexPower = 0;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (timer.get() - lastUpdate > UPDATE_TIME) {
-      Robot.m_Shooter.updatePower();
-      Robot.m_Shooter.setIndex();
-      lastUpdate = timer.get();
+    
+    if(timer.get() - lastUpdate > UPDATE_TIME) {
+      if(Robot.m_OI.controller.getPOV() == 0) {
+        shooterPower += 0.01;
+        lastUpdate = timer.get();
+      } else if(Robot.m_OI.controller.getPOV() == 180) {
+        shooterPower -= 0.01;
+        lastUpdate = timer.get();
+      }
+      
+      if(Robot.m_OI.controller.getPOV() == 90) {
+        indexPower += 0.01;
+        lastUpdate = timer.get();
+      } else if(Robot.m_OI.controller.getPOV() == 270) {
+        indexPower -= 0.01;
+        lastUpdate = timer.get();
+      }
     }
 
     if(Robot.m_OI.controller.getRawButton(OI.Button.A.getButtonNumber())) {
-      Robot.m_Shooter.rampUp(-0.9);
+      Robot.m_Shooter.setShooterPower(shooterPower);
     } else {
-      Robot.m_Shooter.rampUp(0);
+      Robot.m_Shooter.setShooterPower(0);
     }
 
     if(Robot.m_OI.controller.getRawButton(OI.Button.B.getButtonNumber())) {
-      Robot.m_Shooter.index(0.5);
+      Robot.m_Shooter.setIndexPower(indexPower);
     } else {
-      Robot.m_Shooter.index(0);
+      Robot.m_Shooter.setIndexPower(0);
     }
 
-    SmartDashboard.putNumber("Flywheel Power", Robot.m_Shooter.shooterPower);
-    SmartDashboard.putNumber("Indexer Power", Robot.m_Shooter.indexPower);
+
+    SmartDashboard.putNumber("Indexer Power", indexPower);
+    SmartDashboard.putNumber("Shooter Power", shooterPower);
   }
 
-  // Make this return trsue when this Command no longer needs to run execute()
+  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
     return false;
@@ -65,7 +82,8 @@ public class FlywheelControl extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    Robot.m_Shooter.rampUp(0);
+    Robot.m_Shooter.setIndexPower(0);
+    Robot.m_Shooter.setShooterPower(0);
   }
 
   // Called when another command which requires one or more of the same

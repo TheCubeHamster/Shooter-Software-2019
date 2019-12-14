@@ -7,13 +7,10 @@
 
 package frc.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.commands.FlywheelControl;
-import frc.robot.Robot;
+import frc.commands.ShooterControl;
 import frc.robot.RobotMap;
 
 
@@ -27,53 +24,30 @@ public class Shooter extends Subsystem {
     flywheel = new WPI_TalonSRX(RobotMap.FLYWHEEL_PORT);
     indexer = new WPI_TalonSRX(RobotMap.INDEXER_PORT);
 
-    flywheel.setInverted(InvertType.InvertMotorOutput);
+    flywheel.setInverted(RobotMap.FLYWHEEL_INVERTED);
     flywheel.configVoltageCompSaturation(12.0);
 
-    indexer.setInverted(InvertType.InvertMotorOutput);
+    indexer.setInverted(RobotMap.INDEXER_INVERTED);
     indexer.configVoltageCompSaturation(12.0);
 
     flywheel.enableVoltageCompensation(true);
     indexer.enableVoltageCompensation(true);
   }
-  public void updatePower() {
-    if (Robot.m_OI.controller.getPOV() == 0) {
-      shooterPower += 0.01;
-    }
-    else if (Robot.m_OI.controller.getPOV() == 180) {
-      shooterPower -= 0.01;
-    }
+
+
+  public void setShooterPower(double shooterPower) {
+    flywheel.set(shooterPower);
   }
 
-  public void setIndex() {
-    if (Robot.m_OI.controller.getPOV() == 270) {
-      indexPower += 0.01;
-    }
-    else if (Robot.m_OI.controller.getPOV() == 90) {
-      indexPower -= 0.01;
-    }
+  public void setIndexPower(double indexPower) {
+    indexer.set(indexPower);
   }
 
-  public void setShootPower() {
-    flywheel.set(ControlMode.PercentOutput, shooterPower);
-  }
-  public void setIndexPower() {
-    indexer.set(ControlMode.PercentOutput, indexPower);
-  }
-  public void rampUp(double power) {
-    flywheel.set(ControlMode.PercentOutput, power);
-  }
 
-  public void off() {
-    flywheel.set(ControlMode.PercentOutput, 0);
-  }
-  public void index(double index) {
-    indexer.set(ControlMode.PercentOutput, 0.5);
-  }
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
-    setDefaultCommand(new FlywheelControl());
+    setDefaultCommand(new ShooterControl());
 
   }
 }
