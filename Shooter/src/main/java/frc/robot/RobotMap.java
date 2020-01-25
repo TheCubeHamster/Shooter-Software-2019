@@ -11,7 +11,6 @@ package frc.robot;
  * Add your docs here.
  */
 public class RobotMap {
-
     public static final int FLYWHEEL_PORT = 1;
     public static final int INDEXER_PORT = 2;
     public static final boolean FLYWHEEL_INVERTED = false;
