@@ -18,7 +18,7 @@ public class ShooterControl extends Command {
   private double lastUpdate;
   private double shooterPower, indexPower;
 
-  private static final double UPDATE_TIME = 0.25;
+  private static final double UPDATE_TIME = 0.1;
   public ShooterControl() {
     requires(Robot.m_Shooter);
   }
